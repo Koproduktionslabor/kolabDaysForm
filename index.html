@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
+    />
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <title>Kolab Days x Electronic Music</title>
+  </head>
+  <body>
+    <div class="is-family-code">
+    <section class="hero is-warning">
+      <div class="hero-body">
+        <div class="container">
+          <div class="is-text-weight-extrabold">
+          <h1 class="title">Kolab Days x Electronic Music</h1>
+        </div>
+        </div>
+      </div>
+    </section>
+    <form id="form" class="container m-4 pl-4">
+      <div class="field">
+        <label class="label">Name</label>
+        <div class="control">
+          <input
+            class="input"
+            type="text"
+            placeholder="Your Name"
+            name="Name"
+          />
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Surname</label>
+        <div class="control">
+          <input
+            class="input"
+            type="text"
+            placeholder="Your Surname"
+            name="Surname"
+          />
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Email</label>
+        <div class="control">
+          <input
+            class="input"
+            type="email"
+            placeholder="Your Email"
+            name="Email"
+          />
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Workshop</label>
+        <div class="control">
+          <input
+            class="input"
+            type="Workshop"
+            placeholder="Workshop"
+            name="Workshop"
+          />
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">I want to get info via mail</label>
+        <div class="control">
+          <label class="radio">
+            <input type="radio" name="Get info via mail" value="yes" /> Yes
+          </label>
+          <label class="radio">
+            <input type="radio" name="Get info via mail" value="no" /> No
+          </label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Agree to Terms</label>
+        <h2 class="titel">Notice of Filming and Photography:</h2>
+        <h3 class="info">When you attend this event, you enter an area where photography, audio, and video recording may occur. 
+          By entering the event premises, you consent to such recording media and its release, publication, exhibition or reproduction.
+        If you don't agree with this terms, please let us know. ☺️
+        </h3>
+        <br>
+
+        <div class="control">
+          <label class="checkbox">
+            <input type="checkbox" name="Agree To Terms" value="yes" /> I agree
+            to the terms and conditions
+          </label>
+        </div>
+      </div>
+    <div class="field">
+
+        <div class="g-recaptcha" data-sitekey="6Lcj7IMrAAAAAIwbpW2MntCvu1EaATvHsIhpxk_4"></div>
+
+    </div>
+      <div class="field is-grouped">
+        <div class="control">
+          <button class="button is-primary" type="submit" id="submit-button">
+            Submit
+          </button>
+        </div>
+        <div class="control">
+          <button
+            class="button is-danger"
+            type="button"
+            onclick="document.getElementById('form').reset(); document.getElementById('fileNameDisplay').textContent = 'No file selected';"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </form>
+    <div
+      id="message"
+      style="
+        display: none;
+        margin: 20px;
+        padding: 10px;
+        border-radius: 4px;
+        font-weight: bold;
+      "
+    ></div>
+  </div>
+    <script>
+      const form = document.getElementById("form");
+      const submitButton = document.getElementById("submit-button");
+      const messageDiv = document.getElementById("message");
+      const fileInput = document.getElementById("fileInput");
+
+      // Function to handle file upload
+      async function uploadFile(file) {
+        return new Promise((resolve, reject) => {
+          const fr = new FileReader();
+          fr.onload = (e) => {
+            const data = e.target.result.split(",");
+            const obj = {
+              fileName: file.name,
+              mimeType: data[0].match(/:(\w.+);/)[1],
+              data: data[1],
+            };
+            resolve(obj);
+          };
+          fr.onerror = reject;
+          fr.readAsDataURL(file);
+        });
+      }
+
+      form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        messageDiv.textContent = "Submitting...";
+        messageDiv.style.display = "block";
+        messageDiv.style.backgroundColor = "beige";
+        messageDiv.style.color = "black";
+        submitButton.disabled = true;
+        submitButton.classList.add("is-loading");
+
+        try {
+          const formData = new FormData(this);
+          const formDataObj = {};
+
+          // Convert FormData to object
+          for (let [key, value] of formData.entries()) {
+            formDataObj[key] = value;
+          }
+          //Submit CAPTCHA
+        const recaptchaResponse = grecaptcha.getResponse();
+        if (!recaptchaResponse) {
+          alert('Please complete the reCAPTCHA.');
+          return;
+        }
+
+        fetch('YOUR_GOOGLE_SCRIPT_WEBAPP_URL', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            input: document.getElementById('input').value,
+            token: recaptchaResponse
+          })
+        })
+        .then(res => res.json())
+        .then(data => alert(data.result === 'success' ? 'Submitted!' : 'Failed: ' + data.result))
+        .catch(err => alert('Error'));
+
+          // Submit form data
+          const scriptURL =
+            "https://script.google.com/macros/s/AKfycbzZAF5gVONSApAsrMbuNkZzVSqSqaZIKJDC70blPqZb4tgCTrRzqgf7UrKIkC7qGVo/exec";
+  
+
+          const response = await fetch(scriptURL, {
+            redirect: "follow",
+            method: "POST",
+            body: JSON.stringify(formDataObj),
+            headers: {
+              "Content-Type": "text/plain;charset=utf-8",
+            },
+          });
+
+          const data = await response.json();
+
+          if (data.status === "success") {
+            messageDiv.textContent =
+              data.message || "Data submitted successfully!";
+            messageDiv.style.backgroundColor = "#48c78e";
+            messageDiv.style.color = "white";
+            form.reset();
+          //  fileNameDisplay.textContent = "No file selected";
+          } else {
+            throw new Error(data.message || "Submission failed");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          messageDiv.textContent = "Error: " + error.message;
+          messageDiv.style.backgroundColor = "#f14668";
+          messageDiv.style.color = "white";
+        } finally {
+          submitButton.disabled = false;
+          submitButton.classList.remove("is-loading");
+
+          setTimeout(() => {
+            messageDiv.textContent = "";
+            messageDiv.style.display = "none";
+          }, 4000);
+        }
+      });
+
+      // Enhance cancel button to reset file input display
+      const cancelButton = form.querySelector("button.is-danger");
+      cancelButton.addEventListener("click", function () {
+        form.reset();
+        fileNameDisplay.textContent = "No file selected";
+        messageDiv.style.display = "none";
+      });
+    </script>
+  </body>
+</html>
