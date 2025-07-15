@@ -210,13 +210,6 @@
           }, 4000);
         }
 
-          //Submit CAPTCHA
-         const recaptchaResponse = grecaptcha.getResponse();
-        if (!recaptchaResponse) {
-          alert('Please complete the reCAPTCHA.');
-          return;
-        }
-
       });
 
       // Enhance cancel button to reset file input display
@@ -225,6 +218,13 @@
         form.reset();
         messageDiv.style.display = "none";
       });
+
+                //Submit CAPTCHA
+         const recaptchaResponse = grecaptcha.getResponse();
+        if (!recaptchaResponse) {
+          alert('Please complete the reCAPTCHA.');
+          return;
+        }
     </script>
   </body>
 </html>
