@@ -109,7 +109,7 @@
           <button
             class="button is-danger"
             type="button"
-            onclick="document.getElementById('form').reset(); //document.getElementById('fileNameDisplay').textContent = 'No file selected';"
+            onclick="document.getElementById('form').reset();
           >
             Cancel
           </button>
@@ -131,7 +131,7 @@
       const form = document.getElementById("form");
       const submitButton = document.getElementById("submit-button");
       const messageDiv = document.getElementById("message");
-      const fileInput = document.getElementById("fileInput");
+      //const fileInput = document.getElementById("fileInput");
 
       // Function to handle file upload
       async function uploadFile(file) {
@@ -203,7 +203,7 @@
             messageDiv.style.backgroundColor = "#48c78e";
             messageDiv.style.color = "white";
             form.reset();
-           // fileNameDisplay.textContent = "No file selected";
+
           } else {
             throw new Error(data.message || "Submission failed");
           }
@@ -230,7 +230,6 @@
       const cancelButton = form.querySelector("button.is-danger");
       cancelButton.addEventListener("click", function () {
         form.reset();
-        fileNameDisplay.textContent = "No file selected";
         messageDiv.style.display = "none";
       });
     </script>
