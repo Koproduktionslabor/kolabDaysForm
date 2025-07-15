@@ -169,24 +169,6 @@
           for (let [key, value] of formData.entries()) {
             formDataObj[key] = value;
           }
-          //Submit CAPTCHA
-        const recaptchaResponse = grecaptcha.getResponse();
-        if (!recaptchaResponse) {
-          alert('Please complete the reCAPTCHA.');
-          return;
-        }
-
-        fetch('YOUR_GOOGLE_SCRIPT_WEBAPP_URL', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            input: document.getElementById('input').value,
-            token: recaptchaResponse
-          })
-        })
-        .then(res => res.json())
-        .then(data => alert(data.result === 'success' ? 'Submitted!' : 'Failed: ' + data.result))
-        .catch(err => alert('Error'));
 
           // Submit form data
           const scriptURL =
@@ -210,7 +192,7 @@
             messageDiv.style.backgroundColor = "#48c78e";
             messageDiv.style.color = "white";
             form.reset();
-          //  fileNameDisplay.textContent = "No file selected";
+            fileNameDisplay.textContent = "No file selected";
           } else {
             throw new Error(data.message || "Submission failed");
           }
@@ -228,6 +210,26 @@
             messageDiv.style.display = "none";
           }, 4000);
         }
+
+         //Submit CAPTCHA
+        const recaptchaResponse = grecaptcha.getResponse();
+        if (!recaptchaResponse) {
+          alert('Please complete the reCAPTCHA.');
+          return;
+        }
+
+        fetch('YOUR_GOOGLE_SCRIPT_WEBAPP_URL', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            input: document.getElementById('input').value,
+            token: recaptchaResponse
+          })
+        })
+        .then(res => res.json())
+        .then(data => alert(data.result === 'success' ? 'Submitted!' : 'Failed: ' + data.result))
+        .catch(err => alert('Error'));
+
       });
 
       // Enhance cancel button to reset file input display
