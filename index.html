@@ -183,12 +183,6 @@
             token: recaptchaResponse,
           })
 
-          //Submit CAPTCHA
-         const recaptchaResponse = grecaptcha.getResponse();
-        if (!recaptchaResponse) {
-          alert('Please complete the reCAPTCHA.');
-          return;
-        }
           const data = await response.json();
 
           if (data.status === "success") {
@@ -216,7 +210,12 @@
           }, 4000);
         }
 
-
+          //Submit CAPTCHA
+         const recaptchaResponse = grecaptcha.getResponse();
+        if (!recaptchaResponse) {
+          alert('Please complete the reCAPTCHA.');
+          return;
+        }
 
       });
 
