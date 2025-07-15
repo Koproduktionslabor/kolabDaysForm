@@ -182,13 +182,10 @@
             headers: {
               "Content-Type": "text/plain;charset=utf-8",
             },
-            token: recaptchaResponse
+            token: recaptchaResponse,
           })
-         .then(res => res.json())
-        .then(data => alert(data.result === 'success' ? 'Submitted!' : 'Failed: ' + data.result))
-        .catch(err => alert('Error'));
 
-                   //Submit CAPTCHA
+          //Submit CAPTCHA
          const recaptchaResponse = grecaptcha.getResponse();
         if (!recaptchaResponse) {
           alert('Please complete the reCAPTCHA.');
