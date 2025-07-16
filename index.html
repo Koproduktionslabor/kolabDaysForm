@@ -151,6 +151,13 @@
 
       form.addEventListener("submit", async function (e) {
         e.preventDefault();
+        
+                        //Submit CAPTCHA
+         const recaptchaResponse = grecaptcha.getResponse();
+        if (!recaptchaResponse) {
+          alert('Please complete the reCAPTCHA.');
+          return;
+        }
 
         messageDiv.textContent = "Submitting...";
         messageDiv.style.display = "block";
@@ -180,7 +187,7 @@
             headers: {
               "Content-Type": "text/plain;charset=utf-8",
             },
-            token: recaptchaResponse,
+           // token: recaptchaResponse,
           })
 
           const data = await response.json();
@@ -219,12 +226,7 @@
         messageDiv.style.display = "none";
       });
 
-                //Submit CAPTCHA
-         const recaptchaResponse = grecaptcha.getResponse();
-        if (!recaptchaResponse) {
-          alert('Please complete the reCAPTCHA.');
-          return;
-        }
+
     </script>
   </body>
 </html>
